@@ -19,24 +19,27 @@ with DAG(
     description="transform movie rank 2018.01~04.",
     schedule="10 0 * * *",
     start_date=datetime(2018, 1, 1),
-    end_date=datetime(2019, 1, 1),
+    end_date=datetime(2018, 1, 3),
     catchup=True,
     tags=["api", "movie","pyspark", "2018"],
 ) as dag:
 
-    def re_partition(ds_nodash):
+    def re(ds_nodash):
+        from spark_flow.api import re_partition
+        re_partition(ds_nodash)
         print("===============")
 
     task_re_partition=PythonVirtualenvOperator(
             task_id="re.partition",
-            python_callable=re_partition,
-            #requirements=[]
+            python_callable=re,
+            requirements=["git+https://github.com/HaramSs/spark_flow.git@0.1.0/spark"]
             )
 
     task_join_df=BashOperator(
             task_id="join.df",
             bash_command="""
             echo "join_df"
+            #$SPARK_HOME/bin/spark-submit /a/b/c/d/SimpleApp.py
             """
             )
     task_agg=BashOperator(
