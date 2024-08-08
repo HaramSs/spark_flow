@@ -29,19 +29,23 @@ with DAG(
         re_partition(ds_nodash)
         print("===============")
 
+    def join(ds_nodash):
+        from spark_flow.api import join_df
+
     task_re_partition=PythonVirtualenvOperator(
             task_id="re.partition",
             python_callable=re,
             requirements=["git+https://github.com/HaramSs/spark_flow.git@0.1.0/spark"]
             )
 
-    task_join_df=BashOperator(
-            task_id="join.df",
-            bash_command="""
-            echo "join_df"
-            #$SPARK_HOME/bin/spark-submit /a/b/c/d/SimpleApp.py
-            """
+    join_df = BashOperator(
+            task_id='join_df',
+            bash_command='''
+            echo "spark-submit....."
+            $SPARK_HOME/bin/spark-submit /home/haram/code/spyspark/simple_pyspark.py "APPNAME" {{ ds_nodash }}
+            ''',
             )
+
     task_agg=BashOperator(
             task_id="agg",
             bash_command="""
@@ -51,5 +55,5 @@ with DAG(
     task_start=EmptyOperator(task_id="start")
     task_end=EmptyOperator(task_id="end")
 
-    task_start >> task_re_partition >> task_join_df >> task_agg >> task_end
+    task_start >> task_re_partition >> join_df >> task_agg >> task_end
 
