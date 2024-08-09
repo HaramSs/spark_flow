@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 import sys
+import os
 
 app_name = sys.argv[1]
 LOAD_DT = sys.argv[2]
@@ -83,7 +84,7 @@ ON m.movieCd = n.movieCd""")
 df_j.createOrReplaceTempView("join_df")
 
 
-df_j.write.mode("overwrite").partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet(f"/home/haram/data/movie/hive/load_dt={LOAD_DT}")
+df_j.write.mode("overwrite").partitionBy("multiMovieYn", "repNationCd").parquet(f"/home/haram/data/movie/hive/load_dt={LOAD_DT}")
 df_j.show()
 
 ####

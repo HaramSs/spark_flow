@@ -6,7 +6,9 @@ def re_partition(load_dt, from_path='/data/movie/extract'):
     home_dir = os.path.expanduser("~") # /Home/HaramSs
 
     # /Home/HaramSs/data/movie/extract
-    read_path = os.path.join(home_dir, 'data','movie','extract')
+    read_path = os.path.join(home_dir, 'data','movie','extract', f'load_dt={load_dt}')
+    # /home/haram/data/movie/extract
+    # /home/haram/data/movie/extract/load_dt=20150101
     write_path = f'{home_dir}/data/movie/repartition'
 
     df = pd.read_parquet(read_path)
