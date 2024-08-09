@@ -82,7 +82,8 @@ ON m.movieCd = n.movieCd""")
 
 df_j.createOrReplaceTempView("join_df")
 
-df_j.write.mode("overwrite").partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet("/home/haram/data/movie/hive")
+
+df_j.write.mode("overwrite").partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet(f"/home/haram/data/movie/hive/load_dt={LOAD_DT}")
 df_j.show()
 
 ####
