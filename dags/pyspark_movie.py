@@ -18,8 +18,8 @@ with DAG(
     },
     description="transform movie rank 2018.01~04.",
     schedule="10 0 * * *",
-    start_date=datetime(2018, 1, 1),
-    end_date=datetime(2018, 1, 3),
+    start_date=datetime(2015, 1, 1),
+    end_date=datetime(2015, 1, 3),
     catchup=True,
     tags=["api", "movie","pyspark", "2018"],
 ) as dag:
@@ -42,7 +42,7 @@ with DAG(
             task_id='join_df',
             bash_command='''
             echo "spark-submit....."
-            $SPARK_HOME/bin/spark-submit /home/haram/code/spyspark/simple_pyspark.py "APPNAME" {{ ds_nodash }}
+            $SPARK_HOME/bin/spark-submit /home/haram/code/spark_flow/operator/simple_pyspark.py "JoinDF" {{ ds_nodash }}
             ''',
             )
 
