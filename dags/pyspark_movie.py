@@ -19,7 +19,7 @@ with DAG(
     description="transform movie rank 2018.01~04.",
     schedule="10 0 * * *",
     start_date=datetime(2015, 1, 1),
-    end_date=datetime(2015, 1, 3),
+    end_date=datetime(2016, 1, 1),
     catchup=True,
     tags=["api", "movie","pyspark", "2018"],
 ) as dag:
