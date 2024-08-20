@@ -1,4 +1,6 @@
+from pyspark.sql.functions import col, size, explode_outer
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import explode
 import sys
 import os
 
@@ -12,14 +14,15 @@ spark = SparkSession.builder.appName("ParsingParquet").getOrCreate()
 # pyspark 에서 multiline(배열) 구조 데이터 읽기
 jdf = spark.read.option("multiline","true").json('/home/haram/code/movdata/data/movies/year=2015/data.json')
 
-## companys, directors 값이 다중으로 들어가 있는 경우 찾기 위해 count 컬럼 추가
-from pyspark.sql.functions import explode, col, size
-edf = jdf.withColumn("company", explode("companys"))
+edf = jdf.withColumn("company", explode_outer("companys"))
+eedf = edf.withColumn("director", explode_outer("directors"))
 
-eedf = edf.withColumn("director", explode("directors"))
+sdf = eedf.select("movieCd", "movieNm", "genreAlt", "typeNm", "director", "company")
 
-eedf.write.mode("overwrite").parquet("/home/haram/tmp/parquet_data")
+sdf = sdf.withColumn("directorNm", col("director.peopleNm"))
 
+rdf = sdf.select("movieCd", "movieNm", "genreAlt", "typeNm", "directorNm", "company.companyCd", "company.companyNm")
 
+rdf.write.mode("overwrite").parquet('/home/haram/tmp/parquet_data')
 ####
 spark.stop()
